@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Productos{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="text-center mb-3"> 
+            <h1>Lista de Productos</h1>
+            <a href="{% url 'crear_productos' genero.id %}" class="btn btn-primary">Nuevo Producto</a>
+        </div>
+        <hr>
+        <div class="row">
+            {% for producto in productos %}
+                <div class="col-md-4 col-sm-6 col-12 mb-4">
+                    <div class="card border border-secondary" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: {{ producto.color }};">
+                        <div class="text-center" style="padding: 10px;">
+                            <img src="{{ producto.foto.url }}" class="card-img-top" alt="{{ producto.nombre }}" style="width: 180px; height: 180px; object-fit: cover;"> <!-- Tamaño reducido -->
+                        </div>
+                        <hr>
+                        <div class="card-body text-center" style="padding: 10px;"> 
+                            <h5 class="card-title" style="font-size: 1.1rem;"><strong>{{ producto.nombre }}</strong></h5> 
+                            <p class="card-text" style="font-size: 0.8rem;">
+                                {% if producto.descripcion|length > 100 %} 
+                                    {{ producto.descripcion|slice:":20" }}...
+                                    <a href="#" class="text-primary" onclick="showDescription('{{ producto.descripcion|escapejs }}')">Leer más</a>
+                                {% else %}
+                                    {{ producto.descripcion }}
+                                {% endif %}
+                            </p>
+                            <p class="card-text" style="font-size: 0.9rem;"><strong>{{ producto.precio }}$ CUP</strong></p>
+                            
+                            <div style="margin-top: 10px;"> <!-- Espacio entre los botones y el contenido -->
+                                <button id="copyPhoneButton" class="btn btn-info mb-2" onclick="copyToClipboard('+1234567890')">Número de Teléfono</button>
+                                
+                                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                                    <a href="{% url 'editar_productos' genero.id producto.id %}" class="btn btn-warning btn-sm">Editar</a> <!-- Botón más pequeño -->
+                                    <a href="{% url 'eliminar_productos' genero.id producto.id %}" class="btn btn-danger btn-sm">Eliminar</a> <!-- Botón más pequeño -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-center">No hay productos disponibles.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(phoneNumber) {
+            const tempInput = document.createElement('input');
+            tempInput.value = phoneNumber;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Número de teléfono copiado: ' + phoneNumber);
+        }
+        
+        function showDescription(description) {
+            alert(description);
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Producto{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% if form.instance.pk %}Editar{% else %}Crear{% endif %} Producto</title>
+    </head>
+    <body>
+        <h1>{% if form.instance.pk %}Editar{% else %}Crear{% endif %} Producto en "{{ genero.nombre }}"</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Guardar</button>
+        </form>
+        <a href="{% url 'lista_productos' genero.id %}">Cancelar</a>
+    </body>
+</div>
+{% endblock %}
